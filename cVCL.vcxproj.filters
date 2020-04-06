@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BtnEdit.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonControl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckBox.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Clipboard.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Collection.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ComboBox.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonCtl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Control.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cVcl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Edit.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Form.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Grids.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GroupBox.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ImgList.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Label.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="List.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ListBox.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MaskEdit.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Memo.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MsgTarget.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjWndProc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Panel.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Radio.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Splitter.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusBar.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Stream.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="String.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Strings.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SysInit.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TabControl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeView.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WinApp.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WinControl.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="WinUtils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdinc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BtnEdit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CheckBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Clipboard.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Collection.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ComboBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonCtl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Control.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Edit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Form.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GroupBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ImgList.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Label.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="List.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ListBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MaskEdit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Memo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgTarget.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjWndProc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Panel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Radio.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Splitter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusBar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Stream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="String.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Strings.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SysInit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TabControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeView.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WinControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WinUtils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="WinApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="objWndProcX64.asm">
+      <Filter>源文件</Filter>
+    </CustomBuild>
+    <CustomBuild Include="objWndProcX86.asm">
+      <Filter>源文件</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\32761.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\32762.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\32763.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\32764.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\32765.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\32766.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\32767.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBABORT.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBALL.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBCANCEL.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBCLOSE.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBHELP.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBIGNORE.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBNO.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBOK.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBRETRY.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\BBYES.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\EDITBTN.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res\cVCL.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

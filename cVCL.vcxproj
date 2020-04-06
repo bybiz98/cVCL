@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{04C804A8-FFD3-4950-8132-9FD43B975422}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>cVCL</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>false</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Windows7.1SDK</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CLRSupport>false</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Windows7.1SDK</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CLRSupport>false</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CLRSupport>false</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>Windows7.1SDK</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CVCL_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Imm32.lib;version.lib;Comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CVCL_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>Imm32.lib;version.lib;Comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CVCL_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Imm32.lib;version.lib;Comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CVCL_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Imm32.lib;version.lib;Comctl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Lib>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(OutDir)%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="objWndProcX64.asm">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ml64 /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(fileName).obj</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ml64 /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(fileName).obj</Outputs>
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="objWndProcX86.asm">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ml /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(fileName).obj</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(fileName).obj</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ml /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BtnEdit.hpp" />
+    <ClInclude Include="Button.hpp" />
+    <ClInclude Include="ButtonControl.hpp" />
+    <ClInclude Include="CheckBox.hpp" />
+    <ClInclude Include="Clipboard.hpp" />
+    <ClInclude Include="Collection.hpp" />
+    <ClInclude Include="ComboBox.hpp" />
+    <ClInclude Include="CommonCtl.hpp" />
+    <ClInclude Include="Component.hpp" />
+    <ClInclude Include="Control.hpp" />
+    <ClInclude Include="cVcl.hpp" />
+    <ClInclude Include="Edit.hpp" />
+    <ClInclude Include="Form.hpp" />
+    <ClInclude Include="Graphics.hpp" />
+    <ClInclude Include="Grids.hpp" />
+    <ClInclude Include="GroupBox.hpp" />
+    <ClInclude Include="ImgList.hpp" />
+    <ClInclude Include="Label.hpp" />
+    <ClInclude Include="List.hpp" />
+    <ClInclude Include="ListBox.hpp" />
+    <ClInclude Include="MaskEdit.hpp" />
+    <ClInclude Include="Memo.hpp" />
+    <ClInclude Include="Messages.hpp" />
+    <ClInclude Include="MsgTarget.hpp" />
+    <ClInclude Include="Object.hpp" />
+    <ClInclude Include="ObjWndProc.hpp" />
+    <ClInclude Include="Panel.hpp" />
+    <ClInclude Include="Radio.hpp" />
+    <ClInclude Include="Screen.hpp" />
+    <ClInclude Include="Shape.hpp" />
+    <ClInclude Include="Splitter.hpp" />
+    <ClInclude Include="StatusBar.hpp" />
+    <ClInclude Include="stdinc.h" />
+    <ClInclude Include="Stream.hpp" />
+    <ClInclude Include="String.hpp" />
+    <ClInclude Include="Strings.hpp" />
+    <ClInclude Include="SysInit.hpp" />
+    <ClInclude Include="TabControl.hpp" />
+    <ClInclude Include="Thread.hpp" />
+    <ClInclude Include="Timer.hpp" />
+    <ClInclude Include="TreeView.hpp" />
+    <ClInclude Include="Types.hpp" />
+    <ClInclude Include="WinApp.hpp" />
+    <ClInclude Include="WinControl.hpp" />
+    <ClInclude Include="WinUtils.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BtnEdit.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="ButtonControl.cpp" />
+    <ClCompile Include="CheckBox.cpp" />
+    <ClCompile Include="Clipboard.cpp" />
+    <ClCompile Include="Collection.cpp" />
+    <ClCompile Include="ComboBox.cpp" />
+    <ClCompile Include="CommonCtl.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Control.cpp" />
+    <ClCompile Include="WinApp.cpp" />
+    <ClCompile Include="Edit.cpp" />
+    <ClCompile Include="Form.cpp" />
+    <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="GroupBox.cpp" />
+    <ClCompile Include="ImgList.cpp" />
+    <ClCompile Include="Label.cpp" />
+    <ClCompile Include="List.cpp" />
+    <ClCompile Include="ListBox.cpp" />
+    <ClCompile Include="MaskEdit.cpp" />
+    <ClCompile Include="Memo.cpp" />
+    <ClCompile Include="MsgTarget.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="ObjWndProc.cpp" />
+    <ClCompile Include="Panel.cpp" />
+    <ClCompile Include="Radio.cpp" />
+    <ClCompile Include="Screen.cpp" />
+    <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Splitter.cpp" />
+    <ClCompile Include="StatusBar.cpp" />
+    <ClCompile Include="Stream.cpp" />
+    <ClCompile Include="String.cpp" />
+    <ClCompile Include="Strings.cpp" />
+    <ClCompile Include="SysInit.cpp" />
+    <ClCompile Include="TabControl.cpp" />
+    <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TreeView.cpp" />
+    <ClCompile Include="WinControl.cpp" />
+    <ClCompile Include="WinUtils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\32761.cur" />
+    <None Include="res\32762.cur" />
+    <None Include="res\32763.cur" />
+    <None Include="res\32764.cur" />
+    <None Include="res\32765.cur" />
+    <None Include="res\32766.cur" />
+    <None Include="res\32767.cur" />
+    <None Include="res\BBABORT.bmp" />
+    <None Include="res\BBALL.bmp" />
+    <None Include="res\BBCANCEL.bmp" />
+    <None Include="res\BBCLOSE.bmp" />
+    <None Include="res\BBHELP.bmp" />
+    <None Include="res\BBIGNORE.bmp" />
+    <None Include="res\BBNO.bmp" />
+    <None Include="res\BBOK.bmp" />
+    <None Include="res\BBRETRY.bmp" />
+    <None Include="res\BBYES.bmp" />
+    <None Include="res\EDITBTN.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res\cVCL.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
