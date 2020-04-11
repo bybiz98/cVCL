@@ -16,9 +16,9 @@ typedef BYTE TBorderIcons;
 typedef BYTE TFormBorderStyle;
 
 typedef BYTE TWindowState;
-#define wsNormal				0x1
-#define wsMinimized				0x2
-#define wsMaximized				0x4
+#define wsNormal				0x0
+#define wsMinimized				0x1
+#define wsMaximized				0x2
 
 typedef BYTE TShowAction;
 #define saIgnore				0x0
@@ -92,6 +92,7 @@ private:
 	void ModifySystemMenu();
 	void SetWindowFocus();
 	CForm* GetActiveMDIChild();
+	void CloseModal();
 protected:
 		MSG_MAP_BEGIN()
 			MSG_MAP_ENTRY(WM_CLOSE, CForm::WMClose)
@@ -102,6 +103,7 @@ protected:
 			MSG_MAP_ENTRY(CM_DIALOGKEY, CForm::CMDialogKey)
 			MSG_MAP_ENTRY(CM_DEACTIVATE, CForm::CMDeactivate)
 			MSG_MAP_ENTRY(CM_ACTIVATE, CForm::CMActivate)
+			MSG_MAP_ENTRY(CM_SHOWINGCHANGED, CForm::CMShowingChanged)
 		MSG_MAP_END()
 	void WMClose(TWMClose& Message);
 	void WMNCCreate(TWMNCCreate& Message);
@@ -111,6 +113,7 @@ protected:
 	void CMDialogKey(TCMDialogKey& Message);
 	void CMDeactivate(TCMDeactivate& Message);
 	void CMActivate(TCMActivate& Message);
+	void CMShowingChanged(TMessage& Message);
 protected:
 	virtual void DoCreate();
 	virtual void DoDestroy();
@@ -123,6 +126,9 @@ protected:
 	void WndProc(TMessage& Message) override;
 	virtual void Deactivate();
 	virtual void DoClose(TCloseAction& Action);
+	virtual void DoHide();
+    virtual void DoShow();
+
 
 	virtual void Paint();
 	void PaintWindow(HDC DC) override;
@@ -162,6 +168,9 @@ public:
 	void Hide();
 	void Show();
 	void Release();
+
+	virtual INT ShowModal();
+	void SetWindowToMonitor();
 	
 	INT GetMDIChildCount();
 	CForm* GetMDIChildren(INT I);

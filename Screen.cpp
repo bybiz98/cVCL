@@ -651,14 +651,14 @@ void CScreen::AddForm(CForm* AForm){
 	CustomForms->Add(AForm);
 	if(AForm->InstanceOf(CForm::_Class)){
 		Forms->Add(AForm);
-		//TODO Application->UpdateVisible();
+		GetGlobal().GetApplication()->UpdateVisible();
 	}
 }
 
 void CScreen::RemoveForm(CForm* AForm){
 	CustomForms->Remove(AForm);
 	Forms->Remove(AForm);
-	//TODO Application->UpdateVisible();
-	//TODO if(CustomForms->GetCount() == 0 && Application->HintWindow != NULL)
-	//TODO 	Application->HintWindow->ReleaseHandle();
+	GetGlobal().GetApplication()->UpdateVisible();
+	//TODO if(CustomForms->GetCount() == 0 && GetGlobal().GetApplication()->GetHintWindow() != NULL)
+	//TODO	GetGlobal().GetApplication()->GetHintWindow()->ReleaseHandle();
 }

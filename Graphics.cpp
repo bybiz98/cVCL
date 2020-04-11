@@ -64,6 +64,46 @@ HPALETTE CreateSystemPalette(const TColor Entries[]){
 	return CreatePalette((LOGPALETTE *)&Pal);
 }
 
+GraphicsGlobal GGlobal;
+
+TFontData DefFontData = {
+	0,
+	0, 
+	fpDefault,
+	0,
+	DEFAULT_CHARSET,
+	TEXT("Arial")
+};
+
+UINT GetDefFontCharSet(){
+	TEXTMETRIC TxtMetric;
+	UINT Result = DEFAULT_CHARSET;
+	HDC DisplayDC = GetDC(0);
+	if(DisplayDC != 0){
+		if (SelectObject(DisplayDC, GGlobal.StockFont) != 0){
+			if (GetTextMetrics(DisplayDC, &TxtMetric)){
+				Result = TxtMetric.tmCharSet;
+			}
+		}
+		ReleaseDC(0, DisplayDC);
+	}
+	return Result;
+}
+
+void InitDefFontData(){
+  DefFontData.Height = -MulDiv(8, GGlobal.ScreenLogPixels, 72);
+  if (GetGlobal().GetSysLocaleFastEast())
+	  return ;
+  UINT Charset = GetDefFontCharSet();
+  switch(Charset){
+  case SHIFTJIS_CHARSET:
+        lstrcpyn(DefFontData.Name, TEXT("‚l‚r ‚oƒSƒVƒbƒN"), LF_FACESIZE);
+        DefFontData.Height = -MulDiv(9, GGlobal.ScreenLogPixels, 72);
+		DefFontData.Charset = Charset;
+		break;
+  }
+}
+
 GraphicsGlobal::GraphicsGlobal(){
 	HDC DC = GetDC(0);
 	ScreenLogPixels = GetDeviceCaps(DC, LOGPIXELSY);
@@ -72,6 +112,7 @@ GraphicsGlobal::GraphicsGlobal(){
 	StockBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 	StockFont = (HFONT)GetStockObject(SYSTEM_FONT);
 	StockIcon = LoadIcon(0, IDI_APPLICATION);
+	InitDefFontData();
 	TColor Pal16[] = {clBlack, clMaroon, clGreen, clOlive, clNavy, clPurple, clTeal, clDkGray,
 			clLtGray, clRed, clLime, clYellow, clBlue, clFuchsia, clAqua, clWhite};
 	SystemPalette16 = CreateSystemPalette(Pal16);
@@ -86,16 +127,7 @@ GraphicsGlobal::~GraphicsGlobal(){
 	DeleteObject(SystemPalette16);
 }
 
-GraphicsGlobal GGlobal;
 
-TFontData DefFontData = {
-	0,
-	0, 
-	fpDefault,
-	0,
-	DEFAULT_CHARSET,
-	TEXT("Arial")
-};
 
 CResourceManager FontManager(sizeof(TFontData));
 
@@ -282,7 +314,7 @@ LPTSTR CFont::GetName(){
 }
 
 void CFont::SetName(const LPTSTR Value){
-	if(Value != NULL && ::lstrcmpi(Value, TEXT("")) == 0){
+	if(Value != NULL && ::lstrcmpi(Value, TEXT("")) != 0){
 		TFontData FontData;
 		GetData(FontData);
 		lstrcpyn(FontData.Name, Value, sizeof(FontData.Name) / sizeof(TCHAR));
@@ -1117,11 +1149,11 @@ CPen* CCanvas::GetPen(){
 	return Pen;
 }
 
-
 IMPL_DYN_CLASS(CResourceManager)
 CResourceManager::CResourceManager(WORD AResDataSize):
 	ResList(NULL),
 	ResDataSize(AResDataSize){
+
 	InitializeCriticalSection(&mLock);
 }
 

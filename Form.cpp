@@ -10,6 +10,127 @@ CForm* MainForm = NULL;
 BOOL FocusMessages = TRUE;
 INT FocusCount = 0;
 
+typedef struct _TaskWindow {
+	struct _TaskWindow * Next;
+	HWND Window;
+} TaskWindow, *PTaskWindow;
+
+HWND TaskActiveWindow = 0;
+HWND TaskFirstWindow = 0;
+HWND TaskFirstTopMost = 0;
+PTaskWindow TaskWindowList = NULL;
+
+void DoneApplication(){
+	if(MainForm != NULL && MainForm->GetHandle() != 0){
+		ShowOwnedPopups(MainForm->GetHandle(), FALSE);
+	}
+	//GetGlobal().GetApplication()->SetShowHint(FALSE);
+	GetGlobal().GetApplication()->Destroying();
+	GetGlobal().GetApplication()->DestroyComponents();
+}
+
+BOOL CALLBACK DoDisableWindow(HWND Window, LPARAM Data){
+	PTaskWindow P = NULL;
+	if (Window != TaskActiveWindow && IsWindowVisible(Window) && IsWindowEnabled(Window)){
+		P = (PTaskWindow)malloc(sizeof(TaskWindow));
+		P->Next = TaskWindowList;
+		P->Window = Window;
+		TaskWindowList = P;
+		EnableWindow(Window, FALSE);
+	}
+	return TRUE;
+}
+
+void EnableTaskWindows(PTaskWindow WindowList){
+	PTaskWindow P = NULL;
+	while(WindowList != NULL){
+		P = WindowList;
+		if(IsWindow(P->Window)){
+			EnableWindow(P->Window, TRUE);
+		}
+		WindowList = P->Next;
+		free(P);
+	}
+}
+
+PTaskWindow DisableTaskWindows(HWND ActiveWindow){
+	PTaskWindow Result = NULL;
+	HWND SaveActiveWindow = TaskActiveWindow;
+	PTaskWindow SaveWindowList = TaskWindowList;
+	TaskActiveWindow = ActiveWindow;
+	TaskWindowList = NULL;
+	__try{
+		__try{
+			EnumThreadWindows(GetCurrentThreadId(), &DoDisableWindow, 0);
+			Result = TaskWindowList;
+		}
+		__except(EXCEPTION_EXECUTE_HANDLER){
+			EnableTaskWindows(TaskWindowList);
+			throw;
+		}
+	}
+	__finally{
+		TaskWindowList = SaveWindowList;
+		TaskActiveWindow = SaveActiveWindow;
+	}
+	return Result;
+}
+
+BOOL CALLBACK DoFindWindow(HWND Window, LPARAM Param){
+	if(Window != TaskActiveWindow && Window != MainForm->GetHandle() &&
+		IsWindowVisible(Window) && IsWindowEnabled(Window)){
+		if((GetWindowLong(Window, GWL_EXSTYLE) & WS_EX_TOPMOST) == 0){
+			if(TaskFirstWindow == 0)
+				TaskFirstWindow = Window;
+		}
+		else {
+			if(TaskFirstTopMost == 0)
+				TaskFirstTopMost = Window;
+		}
+	}
+	return TRUE;
+}
+
+HWND FindTopMostWindow(HWND ActiveWindow){
+  TaskActiveWindow = ActiveWindow;
+  TaskFirstWindow = 0;
+  TaskFirstTopMost = 0;
+  EnumThreadWindows(GetCurrentThreadId(), &DoFindWindow, 0);
+  if(TaskFirstWindow != 0)
+		return TaskFirstWindow;
+  else
+		return TaskFirstTopMost;
+}
+
+BOOL SendFocusMessage(HWND Window, WORD Msg){
+	INT Count = FocusCount;
+	SendMessage(Window, Msg, 0, 0);
+	return FocusCount == Count;
+}
+
+typedef struct _CheckTaskInfo{
+    HWND FocusWnd;
+	BOOL Found;
+} CheckTaskInfo, *PCheckTaskInfo;
+
+BOOL CALLBACK CheckTaskWindow(HWND Window, LPARAM Data){
+	BOOL Result = TRUE;
+	if(((PCheckTaskInfo)Data)->FocusWnd == Window){
+		Result = FALSE;
+		((PCheckTaskInfo)Data)->Found = TRUE;
+	}
+	return Result;
+}
+
+BOOL ForegroundTask(){
+	CheckTaskInfo Info;
+	Info.FocusWnd = GetActiveWindow();
+	Info.Found = FALSE;
+	EnumThreadWindows(GetCurrentThreadId(), &CheckTaskWindow, (LPARAM)&Info);
+	return Info.Found;
+}
+
+
 IMPL_DYN_CLASS(CForm)
 CForm::CForm(CComponent* AOwner) : CWinControl(AOwner),
 	ActiveControl(NULL),
@@ -130,7 +251,13 @@ void CForm::CreateParams(TCreateParams& Params){
 	__super::CreateParams(Params);
 	//TODO InitAlphaBlending(Params);
 	if(GetParent() == NULL && GetParentWindow() == 0){
-		Params.WndParent = 0;//TODO Application.Handle;
+		if(MainForm != NULL){
+			Params.WndParent = MainForm->GetHandle();
+		}
+		else{
+			Params.WndParent = 0;//TODO Application.Handle;
+		}
+		
 		Params.Style &= ~(WS_CHILD | WS_GROUP | WS_TABSTOP);
 	}
 	Params.WinClass.style = CS_DBLCLKS;
@@ -410,7 +537,7 @@ TColor CForm::NormalColor(){
 void CForm::SetPosition(TPosition Value){
 	if(Position != Value){
 		Position = Value;
-		if(!IN_TEST(csDesigning, GetComponentState()))
+		if(!IN_TEST(csDesigning, GetComponentState()) && HandleAllocated())
 			RecreateWnd();
 	}
 }
@@ -455,13 +582,6 @@ void CForm::SetActiveControl(CWinControl* Control){
 		}
 	}
 }
-
-BOOL SendFocusMessage(HWND Window, UINT Msg){
-	INT Count = FocusCount;
-	SendMessage(Window, Msg, 0, 0);
-	return FocusCount == Count;
-}
-
 
 BOOL CForm::SetFocusedControl(CWinControl* Control){
 	BOOL Result = FALSE;
@@ -618,6 +738,152 @@ void CForm::Show(){
 	BringToFront();
 }
 
+void CForm::CloseModal(){
+	TCloseAction CloseAction;
+	__try{
+		CloseAction = caNone;
+		if(CloseQuery()){
+			CloseAction = caHide;
+			DoClose(CloseAction);
+		}
+		switch(CloseAction){
+			case caNone:
+				ModalResult = 0;
+				break;
+			case caFree:
+				Release();
+				break;
+		}
+	}
+	__except(EXCEPTION_EXECUTE_HANDLER){
+		ModalResult = 0;
+		GetGlobal().GetApplication()->HandleException(this);
+	}
+}
+
+
+void CForm::SetWindowToMonitor(){
+	/*
+	var
+  AppMon, WinMon: HMONITOR;
+  I, J: Integer;
+  ALeft, ATop: Integer;
+begin
+    if (FDefaultMonitor <> dmDesktop) and (Application.MainForm <> nil) then
+    begin
+      AppMon := 0;
+      if FDefaultMonitor = dmMainForm then
+        AppMon := Application.MainForm.Monitor.Handle
+      else if (FDefaultMonitor = dmActiveForm) and (Screen.ActiveCustomForm <> nil) then
+        AppMon := Screen.ActiveCustomForm.Monitor.Handle
+      else if FDefaultMonitor = dmPrimary then
+        AppMon := Screen.Monitors[0].Handle;
+      WinMon := Monitor.Handle;
+      for I := 0 to Screen.MonitorCount - 1 do
+        if (Screen.Monitors[I].Handle = AppMon) then
+          if (AppMon <> WinMon) then
+            for J := 0 to Screen.MonitorCount - 1 do
+              if (Screen.Monitors[J].Handle = WinMon) then
+              begin
+                if FPosition = poScreenCenter then
+                  SetBounds(Screen.Monitors[I].Left + ((Screen.Monitors[I].Width - Width) div 2),
+                    Screen.Monitors[I].Top + ((Screen.Monitors[I].Height - Height) div 2),
+                     Width, Height)
+                else
+                if FPosition = poMainFormCenter then
+                begin
+                  SetBounds(Screen.Monitors[I].Left + ((Screen.Monitors[I].Width - Width) div 2),
+                    Screen.Monitors[I].Top + ((Screen.Monitors[I].Height - Height) div 2),
+                     Width, Height)
+                end
+                else
+                begin
+                  ALeft := Screen.Monitors[I].Left + Left - Screen.Monitors[J].Left;
+                  if ALeft + Width > Screen.Monitors[I].Left + Screen.Monitors[I].Width then
+                    ALeft := Screen.Monitors[I].Left + Screen.Monitors[I].Width - Width;
+                  ATop := Screen.Monitors[I].Top + Top - Screen.Monitors[J].Top;
+                  if ATop + Height > Screen.Monitors[I].Top + Screen.Monitors[I].Height then
+                    ATop := Screen.Monitors[I].Top + Screen.Monitors[I].Height - Height;
+                  SetBounds(ALeft, ATop, Width, Height);
+                end;
+              end;
+    end;
+	//*/
+}
+
+INT CForm::ShowModal(){
+	INT Result = 0;
+	//CancelDrag();
+	if(GetVisible() || !GetEnabled() || IN_TEST(fsModal, FormState) || (FormStyle == fsMDIChild))
+		throw "Cannot make a visible window modal";
+	if(GetCapture() != 0){
+		SendMessage(GetCapture(), WM_CANCELMODE, 0, 0);
+	}
+	ReleaseCapture();
+	GetGlobal().GetApplication()->ModalStarted();
+	__try{
+		FormState |= fsModal;
+		HWND ActiveWindow = GetActiveWindow();
+		INT SaveFocusCount = FocusCount;
+		GetScreen()->GetSaveFocusedList()->Insert(0, GetScreen()->GetFocusedForm());
+		GetScreen()->SetFocusedForm(this);
+		TCursor SaveCursor = GetScreen()->GetCursor();
+		GetScreen()->SetCursor(crDefault);
+		INT SaveCount = GetScreen()->GetCursorCount();
+		PTaskWindow WindowList = DisableTaskWindows(0);
+		__try{
+			Show();
+			__try{
+				SendMessage(GetHandle(), CM_ACTIVATE, 0, 0);
+				ModalResult = 0;
+				do{
+					GetGlobal().GetApplication()->HandleMessage();
+					if(GetGlobal().GetApplication()->GetTerminated()){
+						ModalResult = mrCancel;
+					}
+					else{
+						if(ModalResult != 0){
+							CloseModal();
+						}
+					}
+				}while(ModalResult == 0);
+				Result = ModalResult;
+				SendMessage(GetHandle(), CM_DEACTIVATE, 0, 0);
+				if(GetActiveWindow() != GetHandle()){
+					ActiveWindow = 0;
+				}
+			}__finally{
+				Hide();
+			}
+		}
+		__finally{
+			if(GetScreen()->GetCursorCount() == SaveCount){
+				GetScreen()->SetCursor(SaveCursor);
+			}
+			else{
+				GetScreen()->SetCursor(crDefault);
+			}
+			EnableTaskWindows(WindowList);
+			if (GetScreen()->GetSaveFocusedList()->GetCount() > 0){
+				GetScreen()->SetFocusedForm((CForm *)GetScreen()->GetSaveFocusedList()->First());
+				GetScreen()->GetSaveFocusedList()->Remove(GetScreen()->GetFocusedForm());
+			}
+			else{
+				GetScreen()->SetFocusedForm(NULL);
+			}
+			if(ActiveWindow != 0){
+				SetActiveWindow(ActiveWindow);
+			}
+			FocusCount = SaveFocusCount;
+			FormState &= !fsModal;
+		}
+	}
+	__finally{
+		GetGlobal().GetApplication()->ModalFinished();
+	}
+	return Result;
+}
+
 void CForm::Release(){
 	PostMessage(GetHandle(), CM_RELEASE, 0, 0);
 }
@@ -655,6 +921,16 @@ void CForm::SendCancelMode(CControl* Sender){
 void CForm::DoClose(TCloseAction& Action){
 	if(OnClose != NULL)
 		CALL_EVENT(Close)(this, Action);
+}
+
+void CForm::DoHide(){
+	if(OnHide != NULL)
+		CALL_EVENT(Hide)(this);
+}
+
+void CForm::DoShow(){
+	if(OnShow != NULL)
+		CALL_EVENT(Show)(this);
 }
 
 void CForm::Paint(){
@@ -862,7 +1138,124 @@ void CForm::CMActivate(TCMActivate& Message){
 		Activate();
 	else
 		FormState |= fsActivated;
+}
 
+void CForm::CMShowingChanged(TMessage& Message){
+	INT ShowCommands[] = {SW_SHOWNORMAL, SW_SHOWMINNOACTIVE, SW_SHOWMAXIMIZED};
+
+	INT X = 0, Y = 0;
+	CForm* CenterForm = NULL;
+	HWND NewActiveWindow = 0;
+	if(!IN_TEST(csDesigning, GetComponentState()) && IN_TEST(fsShowing, FormState))
+		throw "Cannot change Visible in OnShow or OnHide";
+	GetGlobal().GetApplication()->UpdateVisible();
+	FormState |= fsShowing;
+	__try{
+		if(!IN_TEST(csDesigning, GetComponentState())){
+			if(GetShowing()){
+				__try{
+					DoShow();
+				}
+				__except(EXCEPTION_EXECUTE_HANDLER){
+					GetGlobal().GetApplication()->HandleException(this);
+				}
+				if((Position == poScreenCenter) || ((Position == poMainFormCenter) && (FormStyle == fsMDIChild))){
+					if(FormStyle == fsMDIChild){
+						X = (MainForm->GetClientWidth() - GetWidth()) / 2;
+						Y = (MainForm->GetClientHeight() - GetHeight()) / 2;
+					}
+					else{
+						X = (GetScreen()->GetWidth() - GetWidth()) / 2;
+						Y = (GetScreen()->GetHeight() - GetHeight()) / 2;
+					}
+					if(X < 0) X = 0;
+					if(Y < 0) Y = 0;
+					SetBounds(X, Y, GetWidth(), GetHeight());
+					if(GetVisible())
+						;//SetWindowToMonitor();
+				}
+				else if(IN_TEST(Position, poMainFormCenter | poOwnerFormCenter)){
+					CenterForm = MainForm;
+					if((Position == poOwnerFormCenter) && (GetOwner()->InstanceOf(CForm::_Class)))
+						CenterForm = (CForm*)GetOwner();
+					if(CenterForm != NULL){
+						X = ((CenterForm->GetWidth() - GetWidth()) / 2) + CenterForm->GetLeft();
+						Y = ((CenterForm->GetHeight() - GetHeight()) / 2) + CenterForm->GetTop();
+					}
+					else{
+						X = (GetScreen()->GetWidth() - GetWidth()) / 2;
+						Y = (GetScreen()->GetHeight() - GetHeight()) / 2;
+					}
+					if(X < 0) X = 0;
+					if(Y < 0) Y = 0;
+					SetBounds(X, Y, GetWidth(), GetHeight());
+					if(GetVisible())
+						;//SetWindowToMonitor();
+				}
+				else if (Position == poDesktopCenter){
+					if(FormStyle == fsMDIChild){
+						X = (MainForm->GetClientWidth() - GetWidth()) / 2;
+						Y = (MainForm->GetClientHeight() - GetHeight()) / 2;
+					}
+					else {
+						X = (GetScreen()->GetDesktopWidth() - GetWidth()) / 2;
+						Y = (GetScreen()->GetDesktopHeight() - GetHeight()) / 2;
+					}
+					if(X < 0) X = 0;
+					if(Y < 0) Y = 0;
+					SetBounds(X, Y, GetWidth(), GetHeight());
+				}
+				Position = poDesigned;
+				if(FormStyle == fsMDIChild){
+					//Fake a size message to get MDI to behave 
+					if (WindowState == wsMaximized){
+						SendMessage(MainForm->GetClientHandle(), WM_MDIRESTORE, (WPARAM)GetHandle(), 0);
+						ShowWindow(GetHandle(), SW_SHOWMAXIMIZED);
+					}
+					else{
+						ShowWindow(GetHandle(), ShowCommands[WindowState]);
+						CallWindowProc(&DefMDIChildProc, GetHandle(), WM_SIZE, SIZE_RESTORED,
+							GetWidth() | (GetHeight() << 16));
+						BringToFront();
+					}
+					SendMessage(MainForm->GetClientHandle(), WM_MDIREFRESHMENU, 0, 0);
+				}
+				else ShowWindow(GetHandle(), ShowCommands[WindowState]);
+			}
+			else{
+				__try{
+					DoHide();
+				}
+				__except(EXCEPTION_EXECUTE_HANDLER){
+					GetGlobal().GetApplication()->HandleException(this);
+				}
+				if(GetScreen()->GetActiveForm() == this)
+					;//MergeMenu(FALSE);
+				if(FormStyle == fsMDIChild)
+					DestroyHandle();
+				else if(IN_TEST(fsModal, FormState))
+					SetWindowPos(GetHandle(), 0, 0, 0, 0, 0, SWP_HIDEWINDOW |
+						SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+				else{
+					NewActiveWindow = 0;
+					if(GetActiveWindow() == GetHandle() && !IsIconic(GetHandle())){
+						NewActiveWindow = FindTopMostWindow(GetHandle());
+					}
+					if(NewActiveWindow != 0){
+						SetWindowPos(GetHandle(), 0, 0, 0, 0, 0, SWP_HIDEWINDOW |
+							SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+						SetActiveWindow(NewActiveWindow);
+					}
+					else {
+						ShowWindow(GetHandle(), SW_HIDE);
+					}
+				}
+			}
+		}
+	}
+	__finally{
+		FormState &= !fsShowing;
+	}
 }
 
 void CForm::MouseWheelHandler(TMessage& Message){
