@@ -2,6 +2,7 @@
 
 #include "stdinc.h"
 #include "Object.hpp"
+#include "WinApp.hpp"
 
 typedef TNotifyEvent THandleExceptionMethod;
 
@@ -27,6 +28,7 @@ private:
 	BOOL NewStyleControls;
 	HICON AppIcon;
 	LPTSTR LineBreak;
+	CWinApp* Application;
 
 	UINT InitMsg();
 	INT InitPlatformId();
@@ -57,6 +59,7 @@ public:
 	DEFINE_GETTER(BOOL, NewStyleControls)
 	DEFINE_ACCESSOR(HICON, AppIcon)
 	DEFINE_GETTER(LPTSTR, LineBreak)
+	DEFINE_ACCESSOR(CWinApp*, Application)
 
 	REF_DYN_CLASS(CGlobal)
 };

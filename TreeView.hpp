@@ -67,21 +67,7 @@ private:
 	BOOL DoCanExpand(BOOL Expand);
 	void DoExpand(BOOL Expand);
 	void ExpandItem(BOOL Expand, BOOL Recurse);
-	INT GetAbsoluteIndex();
-	BOOL GetExpanded();
-	INT GetLevel();
-	CTreeNode* GetParent();
-	BOOL GetChildren();
-	BOOL GetCut();
-	BOOL GetDropTarget();
-	BOOL GetFocused();
-	INT GetIndex();
-	CTreeNode* GetItem(INT Index);
-	BOOL GetSelected();
-	INT GetCount();
 	void InternalMove(CTreeNode* ParentNode, CTreeNode* Node, HTREEITEM HItem, TAddMode AddMode);
-	BOOL IsEqual(CTreeNode* Node);
-	BOOL IsNodeVisible();
 	void ReadData(CStream* Stream, PTreeNodeInfo Info);
 	void SetCut(BOOL Value);
 	void SetDropTarget(BOOL Value);
@@ -131,6 +117,20 @@ public:
 	void SetSelected(BOOL Value);
 	void SetStateIndex(INT Value);
 	void SetText(String& S);
+	INT GetAbsoluteIndex();
+	BOOL GetExpanded();
+	INT GetLevel();
+	CTreeNode* GetParent();
+	BOOL GetChildren();
+	BOOL GetCut();
+	BOOL GetDropTarget();
+	BOOL GetFocused();
+	INT GetIndex();
+	CTreeNode* GetItem(INT Index);
+	BOOL GetSelected();
+	INT GetCount();
+	BOOL IsEqual(CTreeNode* Node);
+	BOOL IsNodeVisible();
 	
 	DEFINE_GETTER(LPVOID, Data)
 	DEFINE_GETTER(BOOL, Deleting)
@@ -278,7 +278,7 @@ typedef void (CObject::*TTVChangingEvent)(CObject* Sender, CTreeNode* Node, BOOL
 typedef void (CObject::*TTVChangedEvent)(CObject* Sender, CTreeNode* Node);
 typedef void (CObject::*TTVEditingEvent)(CObject* Sender, CTreeNode* Node, BOOL& AllowEdit);
 typedef void (CObject::*TTVEditedEvent)(CObject* Sender, CTreeNode* Node, String& S);
-typedef void (CObject::*TTVExpandingEvent)(CObject* Sender, CTreeNode* Node, BOOL AllowExpansion);
+typedef void (CObject::*TTVExpandingEvent)(CObject* Sender, CTreeNode* Node, BOOL& AllowExpansion);
 typedef void (CObject::*TTVCollapsingEvent)(CObject* Sender, CTreeNode* Node, BOOL& AllowCollapse);
 typedef void (CObject::*TTVExpandedEvent)(CObject* Sender, CTreeNode* Node);
 typedef void (CObject::*TTVCompareEvent)(CObject* Sender, CTreeNode* Node1, CTreeNode* Node2,

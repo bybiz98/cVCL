@@ -12,6 +12,7 @@ private:
 	CControl* MouseControl;
 	BOOL Running;
 	BOOL Terminated;
+	INT ModalLevel;
 
 	BOOL ProcessMessage(MSG& Msg);
 	CControl* DoMouseIdle();
@@ -22,6 +23,8 @@ protected:
 public:
 	DECLARE_TYPE_EVENT(TMessageEvent, Message)
 	DECLARE_TYPE_EVENT(TIdleEvent, Idle)
+	DECLARE_TYPE_EVENT(TNotifyEvent, ModalBegin)
+	DECLARE_TYPE_EVENT(TNotifyEvent, ModalEnd)
 public:
     CWinApp(CComponent* AOwner = NULL);
 	virtual ~CWinApp();
@@ -29,6 +32,11 @@ public:
 	void Run();
 	void HandleException(CObject* Sender);
 	void HandleMessage();
+	void ModalStarted();
+    void ModalFinished();
+	void UpdateVisible();
+
+	DEFINE_GETTER(BOOL, Terminated)
 	
 	REF_DYN_CLASS(CWinApp)
 };

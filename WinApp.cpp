@@ -3,14 +3,19 @@
 #include "SysInit.hpp"
 #include "WinApp.hpp"
 #include "Form.hpp"
+#include "Screen.hpp"
 
 IMPL_DYN_CLASS(CWinApp)
 CWinApp::CWinApp(CComponent* AOwner):CComponent(AOwner),
 	MouseControl(NULL),
 	Running(FALSE),
 	Terminated(FALSE),
+	ModalLevel(0),
 	INIT_EVENT(Message),
-	INIT_EVENT(Idle){
+	INIT_EVENT(Idle),
+	INIT_EVENT(ModalBegin),
+	INIT_EVENT(ModalEnd){
+	GetGlobal().SetApplication(this);
 }
 
 CWinApp::~CWinApp(){
@@ -62,6 +67,49 @@ void CWinApp::HandleMessage(){
 	if(!ProcessMessage(Msg))
 		Idle(Msg);
 }
+
+void CWinApp::ModalStarted(){
+	ModalLevel++;
+	if (ModalLevel == 1 && OnModalBegin != NULL)
+		CALL_EVENT(ModalBegin)(this);
+}
+
+void CWinApp::ModalFinished(){
+	ModalLevel--;
+	if(ModalLevel == 0 && OnModalEnd != NULL)
+		CALL_EVENT(ModalEnd)(this);
+}
+
+
+BOOL AppVisible = FALSE;
+void SetVisible(HWND FHandle, BOOL Value){
+	WORD ShowFlags[] = {
+		SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_NOACTIVATE + SWP_HIDEWINDOW,
+		SWP_NOSIZE + SWP_NOMOVE + SWP_NOZORDER + SWP_NOACTIVATE + SWP_SHOWWINDOW
+	};
+    // Dont auto-update visibility if somebody else has hidden app window
+    if (IsWindowVisible(FHandle) == AppVisible && AppVisible != Value){
+		SetWindowPos(FHandle, 0, 0, 0, 0, 0, ShowFlags[Value]);
+		AppVisible = Value;
+	}
+}
+
+void CWinApp::UpdateVisible(){
+	INT i = 0;
+	CForm* Form = NULL;
+	if(MainForm != NULL && MainForm->HandleAllocated()){
+		for(i = 0; i < GetScreen()->GetFormCount(); i++){
+			Form = GetScreen()->GetForm(i);
+			if(Form->GetVisible() && ((Form->GetParentWindow() == 0) || Form->HandleAllocated() ||
+				!IsChild(Form->GetHandle(), Form->GetParentWindow()))){
+					SetVisible(MainForm->GetHandle(), TRUE);
+					return;
+			}
+		}
+		SetVisible(MainForm->GetHandle(), FALSE);
+	}
+}
+
 
 void CWinApp::Idle(const MSG& Msg){
 	CControl* Control = DoMouseIdle();

@@ -117,8 +117,6 @@ private:
 	CMonitor* GetMonitor(INT Index);
 	INT GetMonitorCount();
 	CStrings* GetFonts();
-	CForm* GetForm(INT Index);
-	INT GetFormCount();
 	void GetMetricSettings();
 	INT GetWidth();
 	void InsertCursor(INT Index, HCURSOR Handle);
@@ -142,9 +140,15 @@ public:
 	void AddForm(CForm* AForm);
 	void RemoveForm(CForm* AForm);
 	HCURSOR GetCursors(INT Index);
+	INT GetFormCount();
+	CForm* GetForm(INT Index);
 
 	DEFINE_GETTER(CFont*, MenuFont)
 	DEFINE_GETTER(TCursor, Cursor)
+	DEFINE_GETTER(INT, CursorCount)
+	DEFINE_GETTER(CList*, SaveFocusedList)
+	DEFINE_ACCESSOR(CForm*, FocusedForm);
+	DEFINE_GETTER(CForm*, ActiveForm);
 
 	REF_DYN_CLASS(CScreen)
 };
