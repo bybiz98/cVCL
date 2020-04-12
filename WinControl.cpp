@@ -1349,7 +1349,7 @@ void CWinControl::UpdateControlState(){
 		if(!(Control->Showing))
 			return ;
 	}
-	//if((Control is TCustomForm || Control->ParentWindow != 0) 
+	if((Control->InstanceOf(CForm::_Class) || Control->ParentWindow != 0))
 		UpdateShowing();
 }
 

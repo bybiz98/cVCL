@@ -150,6 +150,9 @@
     <ClInclude Include="stdinc.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Monitor.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BtnEdit.cpp">
@@ -270,6 +273,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="WinApp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Monitor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

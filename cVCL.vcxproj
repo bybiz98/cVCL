@@ -25,7 +25,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CLRSupport>false</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
@@ -83,7 +83,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CVCL_STATIC_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CVCL_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -205,6 +205,7 @@
     <ClInclude Include="MaskEdit.hpp" />
     <ClInclude Include="Memo.hpp" />
     <ClInclude Include="Messages.hpp" />
+    <ClInclude Include="Monitor.hpp" />
     <ClInclude Include="MsgTarget.hpp" />
     <ClInclude Include="Object.hpp" />
     <ClInclude Include="ObjWndProc.hpp" />
@@ -239,6 +240,7 @@
     <ClCompile Include="CommonCtl.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="Monitor.cpp" />
     <ClCompile Include="WinApp.cpp" />
     <ClCompile Include="Edit.cpp" />
     <ClCompile Include="Form.cpp" />

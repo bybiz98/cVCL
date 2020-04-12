@@ -4,6 +4,7 @@
 #include "Object.hpp"
 #include "Component.hpp"
 #include "WinControl.hpp"
+#include "Monitor.hpp"
 
 //TBorderIcons
 typedef BYTE TBorderIcons;
@@ -56,6 +57,12 @@ typedef BYTE TFormState;
 #define fsCreatedMDIChild		0x10
 #define fsActivated				0x20
 
+typedef BYTE TDefaultMonitor;
+#define dmDesktop				0x0
+#define dmPrimary				0x1
+#define dmMainForm				0x2
+#define dmActiveForm			0x3
+
 typedef void (CObject::*TCloseEvent)(CObject* Sender, TCloseAction& Action);
 typedef void (CObject::*TCloseQueryEvent)(CObject* Sender, BOOL& CanClose);
 typedef void (CObject::*TShortCutEvent)(TWMKey& Msg, BOOL& Handled);
@@ -83,6 +90,7 @@ private:
 	CList* MDIChildren;
 	BOOL KeyPreview;
 	CWinControl* ActiveOleControl;
+	TDefaultMonitor DefaultMonitor;
 
 	void ClientWndProc(TMessage& Message);
 	void IconChanged(CObject* Sender);
@@ -171,7 +179,8 @@ public:
 
 	virtual INT ShowModal();
 	void SetWindowToMonitor();
-	
+	CMonitor* GetMonitor();
+
 	INT GetMDIChildCount();
 	CForm* GetMDIChildren(INT I);
 

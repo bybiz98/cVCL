@@ -151,7 +151,7 @@ CForm::CForm(CComponent* AOwner) : CWinControl(AOwner),
 	Position(poDesigned),
 	ModalResult(mrNone),
 	ActiveOleControl(NULL),
-	//DefaultMonitor(dmActiveForm),
+	DefaultMonitor(dmActiveForm),
 	//InCMParentBiDiModeChanged(FALSE),
 	//PrintScale(poProportional),
 	//AlphaBlendValue(255),
@@ -763,52 +763,69 @@ void CForm::CloseModal(){
 
 
 void CForm::SetWindowToMonitor(){
-	/*
-	var
-  AppMon, WinMon: HMONITOR;
-  I, J: Integer;
-  ALeft, ATop: Integer;
-begin
-    if (FDefaultMonitor <> dmDesktop) and (Application.MainForm <> nil) then
-    begin
-      AppMon := 0;
-      if FDefaultMonitor = dmMainForm then
-        AppMon := Application.MainForm.Monitor.Handle
-      else if (FDefaultMonitor = dmActiveForm) and (Screen.ActiveCustomForm <> nil) then
-        AppMon := Screen.ActiveCustomForm.Monitor.Handle
-      else if FDefaultMonitor = dmPrimary then
-        AppMon := Screen.Monitors[0].Handle;
-      WinMon := Monitor.Handle;
-      for I := 0 to Screen.MonitorCount - 1 do
-        if (Screen.Monitors[I].Handle = AppMon) then
-          if (AppMon <> WinMon) then
-            for J := 0 to Screen.MonitorCount - 1 do
-              if (Screen.Monitors[J].Handle = WinMon) then
-              begin
-                if FPosition = poScreenCenter then
-                  SetBounds(Screen.Monitors[I].Left + ((Screen.Monitors[I].Width - Width) div 2),
-                    Screen.Monitors[I].Top + ((Screen.Monitors[I].Height - Height) div 2),
-                     Width, Height)
-                else
-                if FPosition = poMainFormCenter then
-                begin
-                  SetBounds(Screen.Monitors[I].Left + ((Screen.Monitors[I].Width - Width) div 2),
-                    Screen.Monitors[I].Top + ((Screen.Monitors[I].Height - Height) div 2),
-                     Width, Height)
-                end
-                else
-                begin
-                  ALeft := Screen.Monitors[I].Left + Left - Screen.Monitors[J].Left;
-                  if ALeft + Width > Screen.Monitors[I].Left + Screen.Monitors[I].Width then
-                    ALeft := Screen.Monitors[I].Left + Screen.Monitors[I].Width - Width;
-                  ATop := Screen.Monitors[I].Top + Top - Screen.Monitors[J].Top;
-                  if ATop + Height > Screen.Monitors[I].Top + Screen.Monitors[I].Height then
-                    ATop := Screen.Monitors[I].Top + Screen.Monitors[I].Height - Height;
-                  SetBounds(ALeft, ATop, Width, Height);
-                end;
-              end;
-    end;
-	//*/
+	HMONITOR AppMon = 0, WinMon = 0;
+	INT I = 0, J = 0;
+	INT ALeft = 0, ATop = 0;
+	if((DefaultMonitor != dmDesktop) && (MainForm != NULL)){
+		AppMon = 0;
+		if(DefaultMonitor == dmMainForm)
+			AppMon = MainForm->GetMonitor()->GetHandle();
+		else if((DefaultMonitor == dmActiveForm) && (GetScreen()->GetActiveCustomForm() != NULL))
+			AppMon = GetScreen()->GetActiveCustomForm()->GetMonitor()->GetHandle();
+		else if(DefaultMonitor == dmPrimary)
+			AppMon = GetScreen()->GetMonitor(0)->GetHandle();
+		WinMon = GetMonitor()->GetHandle();
+		for(I = 0; I < GetScreen()->GetMonitorCount(); I++){
+			if(GetScreen()->GetMonitor(I)->GetHandle() == AppMon){
+				if (AppMon != WinMon){
+					for(J = 0; J < GetScreen()->GetMonitorCount(); J++){
+						if(GetScreen()->GetMonitor(J)->GetHandle() == WinMon){
+							CMonitor* MonitorI = GetScreen()->GetMonitor(I);
+							CMonitor* MonitorJ = GetScreen()->GetMonitor(J);
+							if(Position == poScreenCenter){
+								SetBounds(MonitorI->GetLeft() + ((MonitorI->GetWidth() - GetWidth()) / 2),
+									MonitorI->GetTop() + ((MonitorI->GetHeight() - GetHeight()) / 2),
+									GetWidth(), GetHeight());
+							}
+							else if (Position == poMainFormCenter){
+								SetBounds(MonitorI->GetLeft() + ((MonitorI->GetWidth() - GetWidth()) / 2),
+									MonitorI->GetTop() + ((MonitorI->GetHeight() - GetHeight()) / 2),
+									GetWidth(), GetHeight());
+							}
+							else {
+								ALeft = MonitorI->GetLeft() + GetLeft() - MonitorJ->GetLeft();
+								if(ALeft + GetWidth() > MonitorI->GetLeft() + MonitorI->GetWidth())
+									ALeft = MonitorI->GetLeft() + MonitorI->GetWidth() - GetWidth();
+								ATop = MonitorI->GetTop() + GetTop() - MonitorJ->GetTop();
+								if(ATop + GetHeight() > MonitorI->GetTop() + MonitorI->GetHeight())
+									ATop = MonitorI->GetTop() + MonitorI->GetHeight() - GetHeight();
+								SetBounds(ALeft, ATop, GetWidth(), GetHeight());
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+CMonitor* CForm::GetMonitor(){
+	INT I = 0;
+	HMONITOR HM = MonitorFromWindow(GetHandle(), MONITOR_DEFAULTTONEAREST);
+	for(I = 0; I < GetScreen()->GetMonitorCount(); I++){
+		if(GetScreen()->GetMonitor(I)->GetHandle() == HM){
+			return GetScreen()->GetMonitor(I);
+		}
+	}
+	//if we get here, the Monitors array has changed, so we need to clear and reinitialize it
+	GetScreen()->RefreshMonitors();
+
+	for(I = 0; I < GetScreen()->GetMonitorCount(); I++){
+		if(GetScreen()->GetMonitor(I)->GetHandle() == HM){
+			return GetScreen()->GetMonitor(I);
+		}
+	}
+	return NULL;
 }
 
 INT CForm::ShowModal(){
@@ -875,6 +892,7 @@ INT CForm::ShowModal(){
 				SetActiveWindow(ActiveWindow);
 			}
 			FocusCount = SaveFocusCount;
+			//*/
 			FormState &= !fsModal;
 		}
 	}
@@ -1172,7 +1190,7 @@ void CForm::CMShowingChanged(TMessage& Message){
 					if(Y < 0) Y = 0;
 					SetBounds(X, Y, GetWidth(), GetHeight());
 					if(GetVisible())
-						;//SetWindowToMonitor();
+						SetWindowToMonitor();
 				}
 				else if(IN_TEST(Position, poMainFormCenter | poOwnerFormCenter)){
 					CenterForm = MainForm;
@@ -1190,7 +1208,7 @@ void CForm::CMShowingChanged(TMessage& Message){
 					if(Y < 0) Y = 0;
 					SetBounds(X, Y, GetWidth(), GetHeight());
 					if(GetVisible())
-						;//SetWindowToMonitor();
+						SetWindowToMonitor();
 				}
 				else if (Position == poDesktopCenter){
 					if(FormStyle == fsMDIChild){
@@ -1229,8 +1247,8 @@ void CForm::CMShowingChanged(TMessage& Message){
 				__except(EXCEPTION_EXECUTE_HANDLER){
 					GetGlobal().GetApplication()->HandleException(this);
 				}
-				if(GetScreen()->GetActiveForm() == this)
-					;//MergeMenu(FALSE);
+				//if(GetScreen()->GetActiveForm() == this)
+				//	MergeMenu(FALSE);
 				if(FormStyle == fsMDIChild)
 					DestroyHandle();
 				else if(IN_TEST(fsModal, FormState))

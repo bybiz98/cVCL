@@ -6,6 +6,7 @@
 #include "Strings.hpp"
 #include "WinControl.hpp"
 #include "Form.hpp"
+#include "Monitor.hpp"
 
 #pragma pack (1)
 typedef struct _CursorRec *PCursorRec;
@@ -15,11 +16,6 @@ typedef struct _CursorRec{
     HCURSOR Handle;
 } TCursorRec;
 #pragma pack ()
-
-typedef BYTE TMonitorDefaultTo;
-#define mdNearest		0x0
-#define mdNull			0x1
-#define mdPrimary		0x2
 
 #define IDC_NODROP		MAKEINTRESOURCE(32767)
 #define IDC_DRAG		MAKEINTRESOURCE(32766)
@@ -31,27 +27,6 @@ typedef BYTE TMonitorDefaultTo;
 
 class CScreen;
 CScreen* GetScreen();
-
-class cVCL_API CMonitor : public CObject{
-private:
-	HMONITOR Handle;
-	INT MonitorNum;
-public:
-	CMonitor();
-	virtual ~CMonitor();
-	DEFINE_ACCESSOR(HMONITOR, Handle)
-	DEFINE_ACCESSOR(INT, MonitorNum)
-	INT GetLeft();
-	INT GetHeight();
-	INT GetTop();
-	INT GetWidth();
-	TRect GetBoundsRect();
-	TRect GetWorkareaRect();
-	BOOL GetPrimary();
-
-	REF_DYN_CLASS(CMonitor)
-};
-DECLARE_DYN_CLASS(CMonitor, CObject)
 
 class cVCL_API CScreen : public CComponent{
 private:
@@ -114,8 +89,6 @@ private:
 	INT GetWorkAreaWidth();
 	CStrings* GetImes();
 	INT GetHeight();
-	CMonitor* GetMonitor(INT Index);
-	INT GetMonitorCount();
 	CStrings* GetFonts();
 	void GetMetricSettings();
 	INT GetWidth();
@@ -142,13 +115,17 @@ public:
 	HCURSOR GetCursors(INT Index);
 	INT GetFormCount();
 	CForm* GetForm(INT Index);
+	CMonitor* GetMonitor(INT Index);
+	INT GetMonitorCount();
+	void RefreshMonitors();
 
 	DEFINE_GETTER(CFont*, MenuFont)
 	DEFINE_GETTER(TCursor, Cursor)
 	DEFINE_GETTER(INT, CursorCount)
 	DEFINE_GETTER(CList*, SaveFocusedList)
-	DEFINE_ACCESSOR(CForm*, FocusedForm);
-	DEFINE_GETTER(CForm*, ActiveForm);
+	DEFINE_ACCESSOR(CForm*, FocusedForm)
+	DEFINE_GETTER(CForm*, ActiveForm)
+	DEFINE_GETTER(CForm*, ActiveCustomForm)
 
 	REF_DYN_CLASS(CScreen)
 };

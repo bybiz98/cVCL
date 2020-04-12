@@ -32,6 +32,7 @@ void CWinApp::Run(){
 			}
 			__except(EXCEPTION_EXECUTE_HANDLER){
 				HandleException(this);
+				//HandleException(this, GetExceptionCode(), GetExceptionInformation());
 			}
 		}while(!Terminated);
 	}
